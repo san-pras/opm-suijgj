@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lineup Open Mic</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎤%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#fff;--fg:#0a0a0a;--mut:#6b6b6b;--line:#e2e2e2;--soft:#f4f4f4;--inv-bg:#0a0a0a;--inv-fg:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#0a0a0a;--fg:#f5f5f5;--mut:#9a9a9a;--line:#2a2a2a;--soft:#161616;--inv-bg:#f5f5f5;--inv-fg:#0a0a0a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:clamp(22px,5vw,30px);line-height:1.2;margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--mut);font-size:14px;margin:0 0 22px}
+.pill{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--fg);border-radius:99px;padding:2px 10px;margin-bottom:12px}
+.pill.inv{background:var(--inv-bg);color:var(--inv-fg)}
+.mc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:26px}
+.mc div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--soft)}
+.mc small{display:block;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.mc b{font-size:17px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:28px 0 10px}
+.sec h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin:0}
+.sec span{color:var(--mut);font-size:13px}
+ol.l{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+ol.l li{display:flex;align-items:center;gap:14px;padding:11px 4px;border-bottom:1px solid var(--line);transition:background .15s}
+ol.l li:hover{background:var(--soft)}
+.n{width:30px;height:30px;flex:none;border-radius:50%;background:var(--inv-bg);color:var(--inv-fg);display:grid;place-items:center;font-size:13px;font-weight:600}
+.n.w{background:transparent;color:var(--mut);border:1px dashed var(--mut)}
+.empty{color:var(--mut);padding:18px 4px;font-size:14px}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--fg);background:var(--bg);border-radius:10px;padding:8px 14px;transition:transform .1s,background .15s}
+button:hover{background:var(--soft)}button:active{transform:scale(.97)}
+button.pri{background:var(--inv-bg);color:var(--inv-fg)}button.pri:hover{opacity:.85}
+button.ic{padding:4px 9px;border-color:var(--line);color:var(--mut);line-height:1.2}
+button.ic:hover{border-color:var(--fg);color:var(--fg)}
+button:disabled{opacity:.3;cursor:default}
+button.link{border:0;background:none;padding:0;color:var(--mut);font-size:13px;text-decoration:underline}
+input,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px;outline:none}
+input:focus,textarea:focus{border-color:var(--fg)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+.card{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:18px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g label{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+.warn{font-size:13px;color:var(--mut);margin-top:6px}
+li.edit input{border-color:transparent;background:transparent;padding:6px 8px}
+li.edit input:hover{border-color:var(--line)}li.edit input:focus{background:var(--bg)}
+li.edit{cursor:grab}li.drag{opacity:.35}li.over{box-shadow:inset 0 2px 0 var(--fg)}
+.cut{list-style:none;text-align:center;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);padding:10px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.dirty{font-size:13px;color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--inv-bg);color:var(--inv-fg);padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.on{opacity:1}
+details summary{cursor:pointer;color:var(--mut);font-size:14px;margin-top:12px}
+textarea{min-height:90px;margin-top:8px;resize:vertical}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.foot{margin-top:40px;text-align:center}
+@media print{.noprint{display:none!important}.wrap{padding:0}}
+@media (max-width:480px){.g,.mc{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap"><div id="app"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ========= KONFIGURASI =========
+   Biarkan kosong: otomatis terdeteksi dari alamat GitHub Pages
+   (https://USERNAME.github.io/NAMA-REPO/).
+   Isi manual hanya jika memakai domain sendiri. */
+const CFG={owner:'',repo:'',branch:'main',file:'data.json'};
+/* ================================ */
+
+(function detect(){
+  if(CFG.owner&&CFG.repo)return;
+  const m=location.hostname.match(/^(.+)\.github\.io$/);
+  if(m){CFG.owner=m[1];CFG.repo=location.pathname.split('/').filter(Boolean)[0]||location.hostname}
+})();
+const canGH=!!(CFG.owner&&CFG.repo);
+const API=`https://api.github.com/repos/${CFG.owner}/${CFG.repo}/contents/${CFG.file}`;
+
+const $app=document.getElementById('app');
+const EMPTY={date:'',quota:30,mc1:'',mc2:'',list:[],updated:''};
+let state=clone(EMPTY),draft=clone(EMPTY),sha=null;
+let mode='public';            // 'public' | 'login' | 'admin' | 'preview'
+let token=localStorage.getItem('om_token')||'';
+let dirty=false,dragFrom=null,loadErr='';
+
+const uid=()=>Math.random().toString(36).slice(2,9);
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function h(tag,attrs,...kids){const e=document.createElement(tag);
+  for(const k in(attrs||{})){const v=attrs[k];
+    if(k==='class')e.className=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);
+    else if(v===true)e.setAttribute(k,'');else if(v!==false&&v!=null)e.setAttribute(k,v)}
+  kids.flat().forEach(c=>{if(c==null||c===false)return;e.append(c.nodeType?c:document.createTextNode(c))});return e}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),2400)}
+const enc=s=>btoa(unescape(encodeURIComponent(s)));
+const dec=b=>decodeURIComponent(escape(atob(b.replace(/\n/g,''))));
+
+function fmtDate(s){if(!s)return '…………';return new Date(s+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function shortDate(s){return new Date(s+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long'})}
+function isFriday(s){return s&&new Date(s+'T00:00:00').getDay()===5}
+function waText(s){
+  const L=s.list.slice(0,s.quota),W=s.list.slice(s.quota);
+  let t='*Daftar Komika Open Mic – '+fmtDate(s.date)+'*\n\nMC Sesi 1: '+(s.mc1||'-')+'\nMC Sesi 2: '+(s.mc2||'-')+'\n\n';
+  t+=L.map((x,i)=>(i+1)+'. '+x.name).join('\n');
+  if(W.length)t+='\n\n*Waiting list*\n'+W.map((x,i)=>(i+1)+'. '+x.name).join('\n');
+  return t}
+async function copy(s){try{await navigator.clipboard.writeText(waText(s));toast('Daftar disalin ✓')}catch(e){toast('Gagal menyalin')}}
+
+/* ---------- DATA (GitHub) ---------- */
+async function loadData(useToken){
+  loadErr='';
+  if(canGH){
+    try{
+      const r=await fetch(API+'?ref='+CFG.branch+'&t='+Date.now(),{headers:{Accept:'application/vnd.github+json',...(useToken&&token?{Authorization:'Bearer '+token}:{})}});
+      if(r.ok){const j=await r.json();sha=j.sha;return normalize(JSON.parse(dec(j.content)))}
+      if(r.status===401||r.status===403||r.status===404){if(useToken)throw {code:r.status}}
+    }catch(e){if(e&&e.code)throw e}
+  }
+  try{const r=await fetch(CFG.file+'?t='+Date.now());if(r.ok)return normalize(await r.json())}catch(e){}
+  loadErr='Data belum bisa dimuat.';return clone(EMPTY)
+}
+function normalize(d){return Object.assign(clone(EMPTY),d,{list:(d.list||[]).map(x=>({id:x.id||uid(),name:String(x.name||'')}))})}
+
+async function save(){
+  if(!canGH){toast('Alamat GitHub tidak terdeteksi. Unduh data.json lalu commit manual.');return}
+  draft.list=draft.list.map(x=>({id:x.id,name:x.name.trim()})).filter(x=>x.name);
+  draft.updated=new Date().toISOString();
+  const H={Accept:'application/vnd.github+json',Authorization:'Bearer '+token};
+  try{
+    const cur=await fetch(API+'?ref='+CFG.branch+'&t='+Date.now(),{headers:H});
+    let latest=sha;
+    if(cur.ok){latest=(await cur.json()).sha;if(sha&&latest!==sha&&!confirm('Data di GitHub berubah sejak kamu membukanya (mungkin diedit orang lain). Timpa dengan versi kamu?'))return}
+    const r=await fetch(API,{method:'PUT',headers:H,body:JSON.stringify({message:'Update lineup open mic '+(draft.date||''),content:enc(JSON.stringify(draft,null,2)+'\n'),branch:CFG.branch,...(latest?{sha:latest}:{})})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));toast(r.status===401||r.status===403?'Token ditolak / tidak punya izin tulis':'Gagal menyimpan: '+(e.message||r.status));return}
+    sha=(await r.json()).content.sha;state=clone(draft);dirty=false;render();toast('Tersimpan ke GitHub ✓')
+  }catch(e){toast('Gagal menyimpan, cek koneksi')}
+}
+function download(){
+  draft.list=draft.list.map(x=>({id:x.id,name:x.name.trim()})).filter(x=>x.name);draft.updated=new Date().toISOString();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(draft,null,2)+'\n'],{type:'application/json'}));a.download='data.json';a.click();URL.revokeObjectURL(a.href)}
+
+/* ---------- PUBLIK ---------- */
+function viewPublic(s,preview){
+  const L=s.list.slice(0,s.quota),W=s.list.slice(s.quota);
+  return h('div',null,
+    preview&&h('div',{class:'bar noprint'},h('button',{onclick:()=>{mode='admin';render()}},'← Kembali ke mode edit')),
+    h('h1',null,'Daftar komika yang naik di hari Jumat, '+(s.date?shortDate(s.date)+' '+s.date.slice(0,4):'…………')),
+    h('p',{class:'sub'},loadErr||(L.length+' komika tampil'+(W.length?' · '+W.length+' waiting list':''))),
+    h('div',{class:'mc'},
+      h('div',null,h('small',null,'MC Sesi 1'),h('b',null,s.mc1||'—')),
+      h('div',null,h('small',null,'MC Sesi 2'),h('b',null,s.mc2||'—'))),
+    h('div',{class:'sec'},h('h2',null,'Urutan tampil'),h('span',null,L.length+' / '+s.quota)),
+    L.length?h('ol',{class:'l'},L.map((x,i)=>h('li',null,h('div',{class:'n'},i+1),x.name))):h('div',{class:'empty'},'Belum ada komika terdaftar.'),
+    h('div',{class:'sec'},h('h2',null,'Waiting list'),h('span',null,'Prioritas pekan depan')),
+    W.length?h('ol',{class:'l'},W.map((x,i)=>h('li',null,h('div',{class:'n w'},i+1),x.name))):h('div',{class:'empty'},'Tidak ada waiting list.'),
+    h('div',{class:'bar noprint',style:'margin-top:26px'},
+      h('button',{class:'pri',onclick:()=>copy(s)},'Salin untuk WhatsApp'),
+      h('button',{onclick:()=>window.print()},'Cetak')),
+    !preview&&h('div',{class:'foot noprint'},h('button',{class:'link',onclick:()=>{mode=token?'admin':'login';token?enterAdmin():render()}},'Admin')))
+}
+
+/* ---------- LOGIN ---------- */
+function viewLogin(msg){
+  const inp=h('input',{type:'password',placeholder:'github_pat_…',autocomplete:'off',onkeydown:e=>{if(e.key==='Enter')go()}});
+  async function go(){const v=inp.value.trim();if(!v)return;token=v;await enterAdmin(true)}
+  return h('div',null,
+    h('span',{class:'pill'},'Admin'),h('h1',null,'Masuk sebagai admin'),
+    h('p',{class:'sub'},'Tempel GitHub token (fine-grained) yang punya izin Contents: Read and write untuk repo ini. Token hanya disimpan di browser ini.'),
+    h('div',{class:'card'},inp,msg&&h('div',{class:'warn'},msg),
+      h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'pri',onclick:go},'Masuk'),h('button',{onclick:()=>{mode='public';render()}},'Batal'))))
+}
+async function enterAdmin(fresh){
+  if(!canGH){mode='admin';draft=clone(state);render();return}
+  try{
+    const d=await loadData(true);
+    if(fresh)localStorage.setItem('om_token',token);
+    state=d;draft=clone(d);dirty=false;mode='admin';render()
+  }catch(e){
+    token='';localStorage.removeItem('om_token');mode='login';
+    $app.replaceChildren(viewLogin('Token ditolak atau tidak punya akses ke repo ini.'))
+  }
+}
+
+/* ---------- ADMIN ---------- */
+function mark(){dirty=true;const d=document.getElementById('dirty');if(d)d.textContent='Ada perubahan belum disimpan'}
+function addNames(arr){
+  let added=0,dup=0;const have=new Set(draft.list.map(x=>x.name.trim().toLowerCase()));
+  arr.map(s=>s.replace(/^\s*\d+[.)]\s*/,'').trim()).filter(Boolean).forEach(n=>{
+    if(have.has(n.toLowerCase())){dup++;return}have.add(n.toLowerCase());draft.list.push({id:uid(),name:n});added++});
+  mark();render();toast(added+' nama ditambahkan'+(dup?' · '+dup+' sudah ada':''))}
+function mv(i,d){const j=i+d;if(j<0||j>=draft.list.length)return;[draft.list[i],draft.list[j]]=[draft.list[j],draft.list[i]];mark();render()}
+function del(i){draft.list.splice(i,1);mark();render()}
+function shuffle(){if(!confirm('Acak urutan semua komika?'))return;
+  for(let i=draft.list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[draft.list[i],draft.list[j]]=[draft.list[j],draft.list[i]]}mark();render()}
+function nextWeek(){
+  const W=draft.list.slice(draft.quota);
+  if(!confirm('Mulai pekan berikutnya?\n\nKomika yang sudah tampil dihapus, waiting list ('+W.length+' orang) jadi urutan teratas, dan tanggal maju 7 hari.'))return;
+  const d=new Date((draft.date||new Date().toISOString().slice(0,10))+'T00:00:00');d.setDate(d.getDate()+7);
+  const p=n=>String(n).padStart(2,'0');
+  draft.date=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+  draft.list=W;draft.mc1='';draft.mc2='';mark();render();toast('Pekan baru siap. Jangan lupa simpan.')}
+
+function listRow(x,i){
+  const li=h('li',{class:'edit',draggable:'true'},
+    h('div',{class:'n'+(i>=draft.quota?' w':'')},i<draft.quota?i+1:'W'+(i-draft.quota+1)),
+    h('input',{value:x.name,'aria-label':'Nama komika',oninput:e=>{x.name=e.target.value;mark()},onchange:e=>{x.name=e.target.value.trim();if(!x.name)del(draft.list.indexOf(x))}}),
+    h('button',{class:'ic',title:'Naik',disabled:i===0,onclick:()=>mv(i,-1)},'↑'),
+    h('button',{class:'ic',title:'Turun',disabled:i===draft.list.length-1,onclick:()=>mv(i,1)},'↓'),
+    h('button',{class:'ic',title:'Hapus',onclick:()=>del(i)},'✕'));
+  li.addEventListener('dragstart',()=>{dragFrom=i;li.classList.add('drag')});
+  li.addEventListener('dragend',()=>li.classList.remove('drag'));
+  li.addEventListener('dragover',e=>{e.preventDefault();li.classList.add('over')});
+  li.addEventListener('dragleave',()=>li.classList.remove('over'));
+  li.addEventListener('drop',e=>{e.preventDefault();if(dragFrom==null||dragFrom===i)return;const [m]=draft.list.splice(dragFrom,1);draft.list.splice(i,0,m);dragFrom=null;mark();render()});
+  return li}
+
+function viewAdmin(){
+  const q=draft.quota,n=draft.list.length,rows=[];
+  draft.list.forEach((x,i)=>{if(i===q&&q>0)rows.push(h('li',{class:'cut'},'Batas kuota · waiting list di bawah ini'));rows.push(listRow(x,i))});
+  const add=h('input',{placeholder:'Ketik nama komika lalu tekan Enter',id:'addin',onkeydown:e=>{if(e.key==='Enter'&&e.target.value.trim()){addNames([e.target.value]);document.getElementById('addin').focus()}}});
+  const bulk=h('textarea',{placeholder:'Tempel banyak nama, satu nama per baris (nomor di depan otomatis dibuang)'});
+  return h('div',null,
+    h('div',{class:'top'},h('span',{class:'pill inv',style:'margin:0'},'Mode admin'),
+      h('div',{class:'row'},
+        h('button',{onclick:()=>{mode='preview';render()}},'👁 Lihat tampilan publik'),
+        h('button',{onclick:()=>{if(dirty&&!confirm('Ada perubahan belum disimpan. Keluar?'))return;localStorage.removeItem('om_token');token='';dirty=false;mode='public';loadData().then(d=>{state=d;render()})}},'Keluar'))),
+    h('h1',null,'Atur lineup open mic'),
+    h('p',{class:'sub'},canGH?'Perubahan baru terlihat publik setelah “Simpan ke GitHub”.':'Alamat GitHub tidak terdeteksi: gunakan “Unduh data.json” lalu commit manual.'),
+    h('div',{class:'card'},h('div',{class:'g'},
+      h('div',null,h('label',null,'Tanggal (Jumat)'),h('input',{type:'date',value:draft.date,onchange:e=>{draft.date=e.target.value;mark();render()}}),
+        draft.date&&!isFriday(draft.date)&&h('div',{class:'warn'},'⚠ Tanggal ini bukan hari Jumat.')),
+      h('div',null,h('label',null,'Jumlah komika yang naik'),h('input',{type:'number',min:0,value:q,onchange:e=>{draft.quota=Math.max(0,parseInt(e.target.value)||0);mark();render()}})),
+      h('div',null,h('label',null,'MC Sesi 1'),h('input',{value:draft.mc1,placeholder:'Nama MC',oninput:e=>{draft.mc1=e.target.value;mark()}})),
+      h('div',null,h('label',null,'MC Sesi 2'),h('input',{value:draft.mc2,placeholder:'Nama MC',oninput:e=>{draft.mc2=e.target.value;mark()}})))),
+    h('div',{class:'sec'},h('h2',null,'Daftar komika'),h('span',null,Math.min(n,q)+' / '+q+' tampil · '+Math.max(0,n-q)+' waiting list')),
+    h('div',{class:'row',style:'margin-bottom:6px'},h('div',{style:'flex:1;min-width:200px'},add),h('button',{onclick:()=>{const v=add.value.trim();if(v)addNames([v])}},'Tambah')),
+    h('details',null,h('summary',null,'Tambah banyak nama sekaligus'),bulk,h('div',{style:'margin-top:8px'},h('button',{onclick:()=>addNames(bulk.value.split('\n'))},'Tambahkan semua'))),
+    h('div',{style:'height:14px'}),
+    n?h('ol',{class:'l'},rows):h('div',{class:'empty'},'Belum ada nama. Tambahkan komika di atas.'),
+    n>0&&h('p',{class:'warn'},'Tip: seret baris atau pakai tombol ↑ ↓ untuk mengubah urutan. Klik nama untuk mengganti.'),
+    h('div',{class:'bar',style:'margin-top:22px'},
+      h('button',{onclick:shuffle},'Acak urutan'),
+      h('button',{onclick:nextWeek},'Mulai pekan berikutnya'),
+      h('button',{onclick:()=>copy(draft)},'Salin teks WhatsApp'),
+      h('button',{onclick:download},'Unduh data.json')),
+    h('div',{class:'row',style:'align-items:center;position:sticky;bottom:12px;background:var(--bg);padding:10px 0;border-top:1px solid var(--line)'},
+      h('button',{class:'pri',onclick:save},'Simpan ke GitHub'),
+      h('span',{class:'dirty',id:'dirty'},dirty?'Ada perubahan belum disimpan':'')))
+}
+
+function render(){
+  let v;
+  if(mode==='login')v=viewLogin();
+  else if(mode==='admin')v=viewAdmin();
+  else if(mode==='preview')v=viewPublic(draft,true);
+  else v=viewPublic(state,false);
+  $app.replaceChildren(v)}
+
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+(async()=>{
+  state=await loadData(false);draft=clone(state);render();
+  if(location.hash==='#admin'){mode=token?'admin':'login';token?enterAdmin():render()}
+  setInterval(async()=>{ // segarkan otomatis untuk pengunjung
+    if(mode!=='public'||document.hidden)return;
+    const d=await loadData(false);
+    if(JSON.stringify(d)!==JSON.stringify(state)){state=d;render()}
+  },120000);
+})();
+</script>
+</body>
+</html>
