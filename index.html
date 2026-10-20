@@ -71,13 +71,21 @@ textarea{min-height:90px;margin-top:8px;resize:vertical}
 const CFG={owner:'',repo:'',branch:'main',file:'data.json'};
 /* ================================ */
 
-(function detect(){
-  if(CFG.owner&&CFG.repo)return;
-  const m=location.hostname.match(/^(.+)\.github\.io$/);
-  if(m){CFG.owner=m[1];CFG.repo=location.pathname.split('/').filter(Boolean)[0]||location.hostname}
-})();
-const canGH=!!(CFG.owner&&CFG.repo);
-const API=`https://api.github.com/repos/${CFG.owner}/${CFG.repo}/contents/${CFG.file}`;
+let canGH=false,API='';
+function setRepo(){
+  if(!(CFG.owner&&CFG.repo)){
+    const m=location.hostname.match(/^(.+)\.github\.io$/);
+    if(m){CFG.owner=m[1];CFG.repo=location.pathname.split('/').filter(Boolean)[0]||location.hostname}
+  }
+  if(!(CFG.owner&&CFG.repo)){
+    const saved=(localStorage.getItem('om_repo')||'').split('/');
+    if(saved.length===2&&saved[0]&&saved[1]){CFG.owner=saved[0];CFG.repo=saved[1]}
+    const b=localStorage.getItem('om_branch');if(b)CFG.branch=b;
+  }
+  canGH=!!(CFG.owner&&CFG.repo);
+  API=`https://api.github.com/repos/${CFG.owner}/${CFG.repo}/contents/${CFG.file}`;
+}
+setRepo();
 
 const $app=document.getElementById('app');
 const EMPTY={date:'',quota:30,mc1:'',mc2:'',list:[],updated:''};
@@ -124,7 +132,7 @@ async function loadData(useToken){
 function normalize(d){return Object.assign(clone(EMPTY),d,{list:(d.list||[]).map(x=>({id:x.id||uid(),name:String(x.name||'')}))})}
 
 async function save(){
-  if(!canGH){toast('Alamat GitHub tidak terdeteksi. Unduh data.json lalu commit manual.');return}
+  if(!canGH){toast('Repo belum diatur. Keluar lalu masuk lagi dan isi nama repo.');return}
   draft.list=draft.list.map(x=>({id:x.id,name:x.name.trim()})).filter(x=>x.name);
   draft.updated=new Date().toISOString();
   const H={Accept:'application/vnd.github+json',Authorization:'Bearer '+token};
@@ -166,16 +174,27 @@ function viewPublic(s,preview){
 
 /* ---------- LOGIN ---------- */
 function viewLogin(msg){
+  const repoIn=h('input',{placeholder:'username/nama-repo',value:canGH?CFG.owner+'/'+CFG.repo:'',autocomplete:'off'});
+  const brIn=h('input',{placeholder:'main',value:CFG.branch||'main',autocomplete:'off'});
   const inp=h('input',{type:'password',placeholder:'github_pat_…',autocomplete:'off',onkeydown:e=>{if(e.key==='Enter')go()}});
-  async function go(){const v=inp.value.trim();if(!v)return;token=v;await enterAdmin(true)}
+  async function go(){
+    const v=inp.value.trim()||token;
+    const r=repoIn.value.trim().replace(/^https?:\/\/github\.com\//,'').replace(/\.git$/,'').replace(/\/$/,'').split('/');
+    if(!v){return}
+    if(r.length<2||!r[0]||!r[1]){toast('Isi repo dengan format username/nama-repo');return}
+    CFG.owner=r[0];CFG.repo=r[1];CFG.branch=brIn.value.trim()||'main';
+    localStorage.setItem('om_repo',CFG.owner+'/'+CFG.repo);localStorage.setItem('om_branch',CFG.branch);
+    API=`https://api.github.com/repos/${CFG.owner}/${CFG.repo}/contents/${CFG.file}`;canGH=true;
+    token=v;await enterAdmin(true)}
+  const lbl=t=>h('label',{style:'font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;display:block;margin:10px 0 4px'},t);
   return h('div',null,
     h('span',{class:'pill'},'Admin'),h('h1',null,'Masuk sebagai admin'),
-    h('p',{class:'sub'},'Tempel GitHub token (fine-grained) yang punya izin Contents: Read and write untuk repo ini. Token hanya disimpan di browser ini.'),
-    h('div',{class:'card'},inp,msg&&h('div',{class:'warn'},msg),
-      h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'pri',onclick:go},'Masuk'),h('button',{onclick:()=>{mode='public';render()}},'Batal'))))
+    h('p',{class:'sub'},'Isi repo GitHub tempat data.json disimpan, lalu tempel token (fine-grained) dengan izin Contents: Read and write. Semua hanya disimpan di browser ini.'),
+    h('div',{class:'card'},lbl('Repo'),repoIn,lbl('Branch'),brIn,lbl('Token'),inp,msg&&h('div',{class:'warn'},msg),
+      h('div',{class:'row',style:'margin-top:14px'},h('button',{class:'pri',onclick:go},'Masuk'),h('button',{onclick:()=>{mode='public';render()}},'Batal'))))
 }
 async function enterAdmin(fresh){
-  if(!canGH){mode='admin';draft=clone(state);render();return}
+  if(!canGH){mode='login';render();return}
   try{
     const d=await loadData(true);
     if(fresh)localStorage.setItem('om_token',token);
@@ -230,7 +249,7 @@ function viewAdmin(){
         h('button',{onclick:()=>{mode='preview';render()}},'👁 Lihat tampilan publik'),
         h('button',{onclick:()=>{if(dirty&&!confirm('Ada perubahan belum disimpan. Keluar?'))return;localStorage.removeItem('om_token');token='';dirty=false;mode='public';loadData().then(d=>{state=d;render()})}},'Keluar'))),
     h('h1',null,'Atur lineup open mic'),
-    h('p',{class:'sub'},canGH?'Perubahan baru terlihat publik setelah “Simpan ke GitHub”.':'Alamat GitHub tidak terdeteksi: gunakan “Unduh data.json” lalu commit manual.'),
+    h('p',{class:'sub'},canGH?'Perubahan baru terlihat publik setelah “Simpan ke GitHub”.':'Repo belum diatur. Klik Keluar lalu masuk lagi dan isi nama repo, atau pakai “Unduh data.json”.'),
     h('div',{class:'card'},h('div',{class:'g'},
       h('div',null,h('label',null,'Tanggal (Jumat)'),h('input',{type:'date',value:draft.date,onchange:e=>{draft.date=e.target.value;mark();render()}}),
         draft.date&&!isFriday(draft.date)&&h('div',{class:'warn'},'⚠ Tanggal ini bukan hari Jumat.')),
