@@ -1,8 +1,105 @@
 {
   "date": "2026-10-23",
   "quota": 30,
-  "mc1": "",
-  "mc2": "",
-  "list": [],
-  "updated": ""
+  "mc1": "Saddam &  Zakaria",
+  "mc2": "Firly & Dina",
+  "list": [
+    {
+      "id": "3x8do90",
+      "name": "Avan"
+    },
+    {
+      "id": "7ql8qd1",
+      "name": "agungs"
+    },
+    {
+      "id": "9ptor5n",
+      "name": "dodok jogja"
+    },
+    {
+      "id": "gv3ww8r",
+      "name": "om paul"
+    },
+    {
+      "id": "8dyf6re",
+      "name": "Raja"
+    },
+    {
+      "id": "xi3oz83",
+      "name": "Petruk"
+    },
+    {
+      "id": "qov3eh4",
+      "name": "Ode"
+    },
+    {
+      "id": "uvdc9ot",
+      "name": "Nawfil"
+    },
+    {
+      "id": "gqjr5r4",
+      "name": "Jun"
+    },
+    {
+      "id": "xm7se0f",
+      "name": "ivan"
+    },
+    {
+      "id": "cv3u07a",
+      "name": "Andoy"
+    },
+    {
+      "id": "9pe6vbi",
+      "name": "Faryd"
+    },
+    {
+      "id": "rbl9q4u",
+      "name": "Vega"
+    },
+    {
+      "id": "8fu4g9p",
+      "name": "Aldi"
+    },
+    {
+      "id": "ehw96jz",
+      "name": "Bimbim"
+    },
+    {
+      "id": "skxs7w9",
+      "name": "Slahudin"
+    },
+    {
+      "id": "y85zqjm",
+      "name": "Mizan"
+    },
+    {
+      "id": "8huzci4",
+      "name": "Fajrian"
+    },
+    {
+      "id": "k9xdbhe",
+      "name": "Melki"
+    },
+    {
+      "id": "53plzgh",
+      "name": "Melani"
+    },
+    {
+      "id": "rbfz4ws",
+      "name": "⁠Teo Jogsel"
+    },
+    {
+      "id": "x4xqji7",
+      "name": "⁠Wahyu Sidiq Pencel"
+    },
+    {
+      "id": "7qnxqj0",
+      "name": "Weldon"
+    },
+    {
+      "id": "6rdmnwa",
+      "name": "Damliey"
+    }
+  ],
+  "updated": "2026-10-20T17:32:06.683Z"
 }
