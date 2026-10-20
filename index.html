@@ -133,7 +133,10 @@ async function save(){
     let latest=sha;
     if(cur.ok){latest=(await cur.json()).sha;if(sha&&latest!==sha&&!confirm('Data di GitHub berubah sejak kamu membukanya (mungkin diedit orang lain). Timpa dengan versi kamu?'))return}
     const r=await fetch(API,{method:'PUT',headers:H,body:JSON.stringify({message:'Update lineup open mic '+(draft.date||''),content:enc(JSON.stringify(draft,null,2)+'\n'),branch:CFG.branch,...(latest?{sha:latest}:{})})});
-    if(!r.ok){const e=await r.json().catch(()=>({}));toast(r.status===401||r.status===403?'Token ditolak / tidak punya izin tulis':'Gagal menyimpan: '+(e.message||r.status));return}
+    if(!r.ok){const e=await r.json().catch(()=>({}));const msg=r.status===401?'Token tidak valid atau kedaluwarsa. Klik Keluar lalu masuk lagi dengan token baru.'
+        :(r.status===403||r.status===404)?'GitHub menolak: token belum punya izin Contents = Read and write untuk repo ini (atau branch dilindungi). Detail: '+(e.message||r.status)
+        :'Gagal menyimpan: '+(e.message||r.status);
+      alert(msg);return}
     sha=(await r.json()).content.sha;state=clone(draft);dirty=false;render();toast('Tersimpan ke GitHub ✓')
   }catch(e){toast('Gagal menyimpan, cek koneksi')}
 }
